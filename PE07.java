@@ -1,5 +1,4 @@
 import java.util.Scanner;
-import java.util.InputMismatchException;
 import java.util.ArrayList;
 
 public class PE07 {
@@ -293,7 +292,10 @@ public class PE07 {
     }
     public boolean moveKing(int player, int yO, int xO, int yD, int xD){
         boolean moved = false;
-        if(Math.abs(yO-yD) > 1 || Math.abs(xO-xD) > 1 || yourPiece(chessboard, xD, yD, player)){
+        int dy = Math.abs(yO - yD);
+        int dx = Math.abs(xO - xD);
+
+        if((dy == 0 && dx == 0) || dy > 1 || dx > 1 || yourPiece(chessboard, xD, yD, player)){
             System.out.println("El rei no pot moure's a aquesta casella");
         }else {
             moved = true;
