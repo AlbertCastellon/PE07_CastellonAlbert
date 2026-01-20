@@ -58,20 +58,20 @@ public class PE07 {
             chessboard[1][i] = 'p';
             chessboard[6][i] = 'P';
         }
-        for(int i = 0; i < chessboard.length; i++){
-            for(int j = 0; j < chessboard.length; j++){
-                if(chessboard[i][j] == '\0'){
-                   chessboard[i][j] = EMPTY; 
+        for (int i = 0; i < chessboard.length; i++) {
+            for (int j = 0; j < chessboard.length; j++) {
+                if (chessboard[i][j] == '\0') {
+                    chessboard[i][j] = EMPTY;
                 }
             }
         }
     }
 
     public void printBoard() {
-        for(int line = 0; line < chessboard.length; line++){
+        for (int line = 0; line < chessboard.length; line++) {
             System.out.print(8 - line);
             System.out.print("||");
-            for(int col = 0; col < chessboard.length; col++){
+            for (int col = 0; col < chessboard.length; col++) {
                 System.out.print(" ");
                 System.out.print(chessboard[line][col]);
             }
@@ -79,12 +79,12 @@ public class PE07 {
         }
         System.out.println("--------------------");
         System.out.print(" ||");
-        for(int col = 0; col < xCoordinates.length; col++){
+        for (int col = 0; col < xCoordinates.length; col++) {
             System.out.print(" ");
             System.out.print(xCoordinates[col]);
         }
         System.out.println("");
-}
+    }
 
     public String getPlayerName() {
         String name = "";
@@ -158,30 +158,34 @@ public class PE07 {
             int yOrigin = getIndex(yCoordinates, nextPlay.charAt(1));
             int xDesti = getIndex(xCoordinates, nextPlay.charAt(3));
             int yDesti = getIndex(yCoordinates, nextPlay.charAt(4));
-            
+
             if (!rightFormat) {
                 System.out.println("Format incorrecte");
                 nextPlay = "";
             } else if (outBounds(xOrigin, yOrigin, xDesti, yDesti)) {
                 System.out.println("Coordenades invàlides");
                 nextPlay = "";
-            } else if(chessboard[yOrigin][xOrigin] == EMPTY) {
+            } else if (chessboard[yOrigin][xOrigin] == EMPTY) {
                 System.out.println("Has de moure una peça");
                 nextPlay = "";
-            }else if(!yourPiece(chessboard, xOrigin, yOrigin, curPlayer)){
+            } else if (!yourPiece(chessboard, xOrigin, yOrigin, curPlayer)) {
                 System.out.println("Només pots moure les teves peces");
                 nextPlay = "";
-            }else {
-                if(Character.toLowerCase(chessboard[yOrigin][xOrigin]) == 'p'){
-                    if(xOrigin == xDesti) {
+            } else {
+                if (Character.toLowerCase(chessboard[yOrigin][xOrigin]) == 'p') {
+                    if (xOrigin == xDesti) {
                         moved = movePawn(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
-                    }else {
+                    } else {
                         moved = capturePawn(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
-                    }  
-                }else if(Character.toLowerCase(chessboard[yOrigin][xOrigin]) == 'a'){
+                    }
+                } else if (Character.toLowerCase(chessboard[yOrigin][xOrigin]) == 'a') {
                     moved = moveBishop(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
-                }else if(Character.toLowerCase(chessboard[yOrigin][xOrigin]) == 'k'){
+                } else if (Character.toLowerCase(chessboard[yOrigin][xOrigin]) == 'k') {
                     moved = moveKing(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
+                } else if (Character.toLowerCase(chessboard[yOrigin][xOrigin]) == 't') {
+                    moved = moveRook(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
+                } else if (Character.toLowerCase(chessboard[yOrigin][xOrigin]) == 'q') {
+                    moved = moveQueen(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
                 }
 
             }
@@ -198,83 +202,61 @@ public class PE07 {
         }
         return false;
     }
-    
-    public int getIndex(char[] coordinates, char target){
+
+    public int getIndex(char[] coordinates, char target) {
         return new String(coordinates).indexOf(target);
     }
-    
-    public boolean outBounds(int xO, int yO, int xD, int yD){
+
+    public boolean outBounds(int xO, int yO, int xD, int yD) {
         return ((xO == -1 || yO == -1) || (xD == -1 || yD == -1));
     }
 
-    public boolean yourPiece(char[][] chb, int x, int y, int curPlayer){
+    public boolean yourPiece(char[][] chb, int x, int y, int curPlayer) {
         boolean yourPiece = true;
-        if(curPlayer == 0){
-            if(chb[y][x] == Character.toUpperCase(chb[y][x]) && chb[y][x] != EMPTY){
-               yourPiece = true;
-            }else {
+        if (curPlayer == 0) {
+            if (chb[y][x] == Character.toUpperCase(chb[y][x]) && chb[y][x] != EMPTY) {
+                yourPiece = true;
+            } else {
                 yourPiece = false;
             }
-        }else {
-            if(chb[y][x] == Character.toLowerCase(chb[y][x]) && chb[y][x] != EMPTY){
-               yourPiece = true;
-            }else {
+        } else {
+            if (chb[y][x] == Character.toLowerCase(chb[y][x]) && chb[y][x] != EMPTY) {
+                yourPiece = true;
+            } else {
                 yourPiece = false;
             }
         }
-        
+
         return yourPiece;
-    } 
-
-    public boolean movePawn(int player, int yO, int xO, int yD, int xD){
-        boolean moved = true;
-        if(player == 0){
-            if(yO - yD == 1 && chessboard[yD][xD] == EMPTY){
-                System.out.println("El peó avança 1 casella.");
-                chessboard[yD][xD] = chessboard[yO][xO];
-                chessboard[yO][xO] = EMPTY;
-            }else if((yO == 6 && yO - yD == 2) && (chessboard[yD][xD] == EMPTY) && (chessboard[(yO-1)][xD])== EMPTY){
-                System.out.println("El peó avança 2 caselles.");
-                chessboard[yD][xD] = chessboard[yO][xO];
-                chessboard[yO][xO] = EMPTY;
-            }else {
-                System.out.println("El peó no pot moure's a aquesta casella.");
-                moved = false;
-            }
-        }else {
-            if(yO - yD == -1 && chessboard[yD][xD] == EMPTY){
-                System.out.println("El peó avança 1 casella.");
-                chessboard[yD][xD] = chessboard[yO][xO];
-                chessboard[yO][xO] = EMPTY;
-            }else if((yO == 1 && yO - yD == -2) && (chessboard[yD][xD] == EMPTY) && (chessboard[(yO+1)][xD])== EMPTY){
-                System.out.println("El peó avança 2 caselles.");
-                chessboard[yD][xD] = chessboard[yO][xO];
-                chessboard[yO][xO] = EMPTY;
-            }else {
-                System.out.println("El peó no pot moure's a aquesta casella.");
-                moved = false;
-            }
-        }
-        return moved;
     }
-    
-    public boolean capturePawn(int player, int yO, int xO, int yD, int xD){
+
+    public boolean movePawn(int player, int yO, int xO, int yD, int xD) {
         boolean moved = true;
-        if(player == 0){
-            if(yO - yD == 1 && (Math.abs(xO - xD)  == 1) && !yourPiece(chessboard, xD, yD, player) && chessboard[yD][xD] != EMPTY){
-                System.out.println("El captura la peça.");
+        if (player == 0) {
+            if (yO - yD == 1 && chessboard[yD][xD] == EMPTY) {
+                System.out.println("El peó avança 1 casella.");
                 chessboard[yD][xD] = chessboard[yO][xO];
                 chessboard[yO][xO] = EMPTY;
-            }else {
+            } else if ((yO == 6 && yO - yD == 2) && (chessboard[yD][xD] == EMPTY)
+                    && (chessboard[(yO - 1)][xD]) == EMPTY) {
+                System.out.println("El peó avança 2 caselles.");
+                chessboard[yD][xD] = chessboard[yO][xO];
+                chessboard[yO][xO] = EMPTY;
+            } else {
                 System.out.println("El peó no pot moure's a aquesta casella.");
                 moved = false;
             }
-        }else {
-            if(yO - yD == -1 && (Math.abs(xO - xD)  == 1) && !yourPiece(chessboard, xD, yD, player) && chessboard[yD][xD] != EMPTY){
-                System.out.println("El captura la peça.");
+        } else {
+            if (yO - yD == -1 && chessboard[yD][xD] == EMPTY) {
+                System.out.println("El peó avança 1 casella.");
                 chessboard[yD][xD] = chessboard[yO][xO];
                 chessboard[yO][xO] = EMPTY;
-            }else {
+            } else if ((yO == 1 && yO - yD == -2) && (chessboard[yD][xD] == EMPTY)
+                    && (chessboard[(yO + 1)][xD]) == EMPTY) {
+                System.out.println("El peó avança 2 caselles.");
+                chessboard[yD][xD] = chessboard[yO][xO];
+                chessboard[yO][xO] = EMPTY;
+            } else {
                 System.out.println("El peó no pot moure's a aquesta casella.");
                 moved = false;
             }
@@ -282,44 +264,70 @@ public class PE07 {
         return moved;
     }
 
-    public boolean moveBishop(int player, int yO, int xO, int yD, int xD){
+    public boolean capturePawn(int player, int yO, int xO, int yD, int xD) {
+        boolean moved = true;
+        if (player == 0) {
+            if (yO - yD == 1 && (Math.abs(xO - xD) == 1) && !yourPiece(chessboard, xD, yD, player)
+                    && chessboard[yD][xD] != EMPTY) {
+                System.out.println("El captura la peça.");
+                chessboard[yD][xD] = chessboard[yO][xO];
+                chessboard[yO][xO] = EMPTY;
+            } else {
+                System.out.println("El peó no pot moure's a aquesta casella.");
+                moved = false;
+            }
+        } else {
+            if (yO - yD == -1 && (Math.abs(xO - xD) == 1) && !yourPiece(chessboard, xD, yD, player)
+                    && chessboard[yD][xD] != EMPTY) {
+                System.out.println("El captura la peça.");
+                chessboard[yD][xD] = chessboard[yO][xO];
+                chessboard[yO][xO] = EMPTY;
+            } else {
+                System.out.println("El peó no pot moure's a aquesta casella.");
+                moved = false;
+            }
+        }
+        return moved;
+    }
+
+    public boolean moveBishop(int player, int yO, int xO, int yD, int xD) {
         boolean moved = false;
-        if(Math.abs(yO - yD) != Math.abs(xO - xD)){
-            System.out.println("l'Alfil només pot moure's en diagonal");
-        }else if(yourPiece(chessboard, xD, yD, player)) {
+        if (Math.abs(yO - yD) != Math.abs(xO - xD)) {
+            System.out.println("La peça no es pot moure en aquesta direcció");
+        } else if (yourPiece(chessboard, xD, yD, player)) {
             System.out.println("No pots capturar les teves peces");
-        }else {
+        } else {
             int i = 1;
-            if(xO - xD < 0 && yO -  yD < 0){
-                while(i < Math.abs(xO - xD)){
-                    if(chessboard[yO + i][xO + i] != EMPTY){
+            if (xO - xD < 0 && yO - yD < 0) {
+                while (i < Math.abs(xO - xD)) {
+                    if (chessboard[yO + i][xO + i] != EMPTY) {
                         moved = false;
                         System.out.println("Hi ha una peça al camí");
                         return moved;
                     }
                     i++;
                 }
-            } else if(xO - xD > 0 && yO -  yD < 0){
-                while(i < Math.abs(xO - xD)){
-                    if(chessboard[yO + i][xO - i] != EMPTY){
+            } else if (xO - xD > 0 && yO - yD < 0) {
+                while (i < Math.abs(xO - xD)) {
+                    if (chessboard[yO + i][xO - i] != EMPTY) {
                         moved = false;
                         System.out.println("Hi ha una peça al camí");
                         return moved;
                     }
                     i++;
                 }
-            }else if(xO - xD > 0 && yO -  yD > 0){
-                while(i < Math.abs(xO - xD)){
-                    if(chessboard[yO - i][xO - i] != EMPTY){
+            } else if (xO - xD > 0 && yO - yD > 0) {
+                while (i < Math.abs(xO - xD)) {
+                    if (chessboard[yO - i][xO - i] != EMPTY) {
                         moved = false;
                         System.out.println("Hi ha una peça al camí");
                         return moved;
                     }
                     i++;
                 }
-            }else if(xO - xD < 0 && yO -  yD > 0){
-                while(i < Math.abs(xO - xD)){
-                    if(chessboard[yO - i][xO + i] != EMPTY){
+            } else if (xO - xD < 0 && yO - yD > 0) {
+                while (i < Math.abs(xO - xD)) {
+                    if (chessboard[yO - i][xO + i] != EMPTY) {
                         moved = false;
                         System.out.println("Hi ha una peça al camí");
                         return moved;
@@ -330,32 +338,116 @@ public class PE07 {
             moved = true;
             chessboard[yD][xD] = chessboard[yO][xO];
             chessboard[yO][xO] = EMPTY;
+            System.out.println("La peça s'ha mogut correctament");
         }
 
         return moved;
     }
 
-    public boolean moveRook(int player, int yO, int xO, int yD, int xD){
+    public boolean moveRook(int player, int yO, int xO, int yD, int xD) {
         boolean moved = false;
+        if (yO == yD && xO == xD) {
+            System.out.println("Has de moure alguna peça");
+        } else if (yO - yD != 0 && xO - xD != 0) {
+            System.out.println("La peça no es pot moure en aquesta direcció");
+        } else if (yourPiece(chessboard, xD, yD, player)) {
+            System.out.println("No pots capturar les teves peces");
+        } else {
+            int i = 1;
+            if (xO == xD) {
+                if (yO < yD) {
+                    while (i < Math.abs(yO - yD)) {
+                        if (chessboard[yO + i][xO] != EMPTY) {
+                            moved = false;
+                            System.out.println("Hi ha una peça al camí");
+                            return moved;
+                        }
+                        i++;
+                    }
+                } else if (yO > yD) {
+                    while (i < Math.abs(yO - yD)) {
+                        if (chessboard[yO - i][xO] != EMPTY) {
+                            moved = false;
+                            System.out.println("Hi ha una peça al camí");
+                            return moved;
+                        }
+                        i++;
+                    }
+                }
 
-        
+            } else {
+                if (xO < xD) {
+                    while (i < Math.abs(xO - xD)) {
+                        if (chessboard[yO][xO + i] != EMPTY) {
+                            moved = false;
+                            System.out.println("Hi ha una peça al camí");
+                            return moved;
+                        }
+                        i++;
+                    }
+                } else if (xO > xD) {
+                    while (i < Math.abs(xO - xD)) {
+                        if (chessboard[yO][xO - i] != EMPTY) {
+                            moved = false;
+                            System.out.println("Hi ha una peça al camí");
+                            return moved;
+                        }
+                        i++;
+                    }
+                }
+
+            }
+            moved = true;
+            chessboard[yD][xD] = chessboard[yO][xO];
+            chessboard[yO][xO] = EMPTY;
+            System.out.println("La peça s'ha mogut correctament");
+        }
+
         return moved;
     }
-    public boolean moveKing(int player, int yO, int xO, int yD, int xD){
+
+    public boolean moveKing(int player, int yO, int xO, int yD, int xD) {
         boolean moved = false;
         int dy = Math.abs(yO - yD);
         int dx = Math.abs(xO - xD);
 
-        if((dy == 0 && dx == 0) || dy > 1 || dx > 1 || yourPiece(chessboard, xD, yD, player)){
+        if ((dy == 0 && dx == 0) || dy > 1 || dx > 1 || yourPiece(chessboard, xD, yD, player)) {
             System.out.println("El rei no pot moure's a aquesta casella");
-        }else {
+        } else {
             moved = true;
             chessboard[yD][xD] = chessboard[yO][xO];
             chessboard[yO][xO] = EMPTY;
             System.out.println("El rei s'ha mogut correctament");
         }
-        
+
         return moved;
     }
 
+    public boolean moveQueen(int player, int yO, int xO, int yD, int xD) {
+
+        if (xO == xD || yO == yD) {
+            return moveRook(player, yO, xO, yD, xD);
+        } else if (Math.abs(yO - yD) == Math.abs(xO - xD)) {
+            return moveBishop(player, yO, xO, yD, xD);
+        } else {
+            System.out.println("La reina no es pot moure en aquesta direcció");
+            return false;
+        }
+    }
+
+    public boolean moveKnight(int player, int yO, int xO, int yD, int xD) {
+        boolean moved = false;
+        if((Math.abs(yO - yD) == 2 && Math.abs(xO - xD) == 1) || (Math.abs(yO - yD) == 1 && Math.abs(xO - xD) == 2)){
+            System.out.println("El caball no pot moure's a aquesta casella");
+        }else if(yourPiece(chessboard, xD, yD, player)){
+            System.out.println("No pots capturar les teves peces");
+        }else {
+            moved = true;
+            chessboard[yD][xD] = chessboard[yO][xO];
+            chessboard[yO][xO] = EMPTY;
+            System.out.println("El caball s'ha mogut correctament");
+        }
+
+        return moved;
+    }
 }
