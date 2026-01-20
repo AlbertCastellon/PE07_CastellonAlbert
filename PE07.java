@@ -139,7 +139,7 @@ public class PE07 {
         int currentPlayer = currentTurn % 2;
 
         System.out.println("És el torn de: " + players[currentPlayer]);
-        getNextPlay(currentPlayer);
+        plays.add(getNextPlay(currentPlayer));
         currentTurn++;
     }
 
@@ -186,6 +186,8 @@ public class PE07 {
                     moved = moveRook(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
                 } else if (Character.toLowerCase(chessboard[yOrigin][xOrigin]) == 'q') {
                     moved = moveQueen(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
+                } else if (Character.toLowerCase(chessboard[yOrigin][xOrigin]) == 'c') {
+                    moved = moveKnight(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
                 }
 
             }
@@ -269,7 +271,7 @@ public class PE07 {
         if (player == 0) {
             if (yO - yD == 1 && (Math.abs(xO - xD) == 1) && !yourPiece(chessboard, xD, yD, player)
                     && chessboard[yD][xD] != EMPTY) {
-                System.out.println("El captura la peça.");
+                System.out.println("El peó captura la peça.");
                 chessboard[yD][xD] = chessboard[yO][xO];
                 chessboard[yO][xO] = EMPTY;
             } else {
@@ -279,7 +281,7 @@ public class PE07 {
         } else {
             if (yO - yD == -1 && (Math.abs(xO - xD) == 1) && !yourPiece(chessboard, xD, yD, player)
                     && chessboard[yD][xD] != EMPTY) {
-                System.out.println("El captura la peça.");
+                System.out.println("El peó captura la peça.");
                 chessboard[yD][xD] = chessboard[yO][xO];
                 chessboard[yO][xO] = EMPTY;
             } else {
@@ -437,11 +439,12 @@ public class PE07 {
 
     public boolean moveKnight(int player, int yO, int xO, int yD, int xD) {
         boolean moved = false;
-        if((Math.abs(yO - yD) == 2 && Math.abs(xO - xD) == 1) || (Math.abs(yO - yD) == 1 && Math.abs(xO - xD) == 2)){
+        if (!((Math.abs(yO - yD) == 2 && Math.abs(xO - xD) == 1)
+                || (Math.abs(yO - yD) == 1 && Math.abs(xO - xD) == 2))) {
             System.out.println("El caball no pot moure's a aquesta casella");
-        }else if(yourPiece(chessboard, xD, yD, player)){
+        } else if (yourPiece(chessboard, xD, yD, player)) {
             System.out.println("No pots capturar les teves peces");
-        }else {
+        } else {
             moved = true;
             chessboard[yD][xD] = chessboard[yO][xO];
             chessboard[yO][xO] = EMPTY;
