@@ -128,19 +128,23 @@ public class PE07 {
         boolean finished = false;
         int winner = 0;
         do {
-            turn();
+            finished = !turn();
 
         } while (!finished);
-
+        winner = (currentTurn - 1) % 2; // l'últim que ha mogut
+        System.out.println("Ha guanyat: " + players[winner]);
         return winner;
     }
 
-    public void turn() {
+    public boolean turn() {
         int currentPlayer = currentTurn % 2;
+        int enemyPlayer = (currentPlayer + 1) % 2;
 
         System.out.println("És el torn de: " + players[currentPlayer]);
         plays.add(getNextPlay(currentPlayer));
         currentTurn++;
+        return kingAlive(enemyPlayer);
+
     }
 
     public String getNextPlay(int curPlayer) {
@@ -452,5 +456,23 @@ public class PE07 {
         }
 
         return moved;
+    }
+
+    public boolean kingAlive(int player) {
+        char king = ' ';
+        if (player == 0) {
+            king = 'K';
+        } else {
+            king = 'k';
+        }
+        for (int i = 0; i < chessboard.length; i++) {
+            for (int j = 0; j < chessboard[i].length; j++) {
+                if (chessboard[i][j] == king) {
+                    return true;
+                }
+            }
+        }
+        return false;
+
     }
 }
