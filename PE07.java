@@ -183,15 +183,6 @@ public class PE07 {
         return nextPlay;
     }
 
-    public boolean contains(char[] array, char target) {
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == target) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public int getIndex(char[] coordinates, char target) {
         return new String(coordinates).indexOf(target);
     }
