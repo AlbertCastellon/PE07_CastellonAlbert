@@ -182,10 +182,12 @@ public class PE07 {
                     } else {
                         moved = capturePawn(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
                     }
-                    if (yDesti == 7 && chessboard[yDesti][xDesti] == 'P'){
-                        promotion(yDesti, xDesti);
-                    }else if (yDesti == 0 && chessboard[yDesti][xDesti] == 'p'){
-                        promotion(yDesti, xDesti);
+                    if (moved) {
+                        if (yDesti == 0 && chessboard[yDesti][xDesti] == 'P') {
+                            chessboard[yDesti][xDesti] = Character.toUpperCase(promotion());
+                        } else if (yDesti == 7 && chessboard[yDesti][xDesti] == 'p') {
+                            chessboard[yDesti][xDesti] = Character.toLowerCase(promotion());
+                        }
                     }
                 } else if (Character.toLowerCase(chessboard[yOrigin][xOrigin]) == 'a') {
                     moved = moveBishop(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
@@ -481,17 +483,18 @@ public class PE07 {
 
     }
 
-    public void promotion(int y, int x) {
+    public char promotion() {
         char newPiece = ' ';
         System.out.println("Per quina peça vols reemplaçar el peó?");
-        do{
+        do {
             newPiece = sc.nextLine().charAt(0);
-            if(Character.toLowerCase(newPiece) != 'q' || Character.toLowerCase(newPiece) != 'c' || Character.toLowerCase(newPiece) != 'a' || Character.toLowerCase(newPiece) != 't'){
+            if (Character.toLowerCase(newPiece) != 'q' && Character.toLowerCase(newPiece) != 'c'
+                    && Character.toLowerCase(newPiece) != 'a' && Character.toLowerCase(newPiece) != 't') {
                 System.out.println("Escull una peça vàlida");
                 newPiece = ' ';
             }
-        }while(newPiece == ' ');
-        
-        chessboard[y][x] = newPiece;
+        } while (newPiece == ' ');
+
+        return newPiece;
     }
 }
