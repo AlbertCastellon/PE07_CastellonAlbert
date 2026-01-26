@@ -176,31 +176,7 @@ public class PE07 {
                 System.out.println("Només pots moure les teves peces");
                 nextPlay = "";
             } else {
-                if (Character.toLowerCase(chessboard[yOrigin][xOrigin]) == 'p') {
-                    if (xOrigin == xDesti) {
-                        moved = movePawn(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
-                    } else {
-                        moved = capturePawn(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
-                    }
-                    if (moved) {
-                        if (yDesti == 0 && chessboard[yDesti][xDesti] == 'P') {
-                            chessboard[yDesti][xDesti] = Character.toUpperCase(promotion());
-                        } else if (yDesti == 7 && chessboard[yDesti][xDesti] == 'p') {
-                            chessboard[yDesti][xDesti] = Character.toLowerCase(promotion());
-                        }
-                    }
-                } else if (Character.toLowerCase(chessboard[yOrigin][xOrigin]) == 'a') {
-                    moved = moveBishop(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
-                } else if (Character.toLowerCase(chessboard[yOrigin][xOrigin]) == 'k') {
-                    moved = moveKing(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
-                } else if (Character.toLowerCase(chessboard[yOrigin][xOrigin]) == 't') {
-                    moved = moveRook(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
-                } else if (Character.toLowerCase(chessboard[yOrigin][xOrigin]) == 'q') {
-                    moved = moveQueen(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
-                } else if (Character.toLowerCase(chessboard[yOrigin][xOrigin]) == 'c') {
-                    moved = moveKnight(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
-                }
-
+                moved = movements(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
             }
         } while (moved != true);
         printBoard();
@@ -483,6 +459,36 @@ public class PE07 {
 
     }
 
+    public boolean movements(int player, int yO, int xO, int yD, int xD) {
+        boolean moved = false;
+        char piece = Character.toLowerCase(chessboard[yO][xO];
+        if (Character.toLowerCase(chessboard[yO][xO]) == 'p') {
+                    if (xO == xD) {
+                        moved = movePawn(player, yO, xO, yD, xD);
+                    } else {
+                        moved = capturePawn(player, yO, xO, yD, xD);
+                    }
+                    if (moved) {
+                        if (yD == 0 && chessboard[yD][xD] == 'P') {
+                            chessboard[yD][xD] = Character.toUpperCase(promotion());
+                        } else if (yD == 7 && chessboard[yD][xD] == 'p') {
+                            chessboard[yD][xD] = Character.toLowerCase(promotion());
+                        }
+                    }
+                } else if (piece == 'a') {
+                    moved = moveBishop(player, yO, xO, yD, xD);
+                } else if (piece == 'k') {
+                    moved = moveKing(player, yO, xO, yD, xD);
+                } else if (piece == 't') {
+                    moved = moveRook(player, yO, xO, yD, xD);
+                } else if (piece == 'q') {
+                    moved = moveQueen(player, yO, xO, yD, xD);
+                } else if (piece == 'c') {
+                    moved = moveKnight(player, yO, xO, yD, xD);
+                }
+                return moved;
+    }
+    
     public char promotion() {
         char newPiece = ' ';
         System.out.println("Per quina peça vols reemplaçar el peó?");
