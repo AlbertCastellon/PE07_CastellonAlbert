@@ -452,8 +452,8 @@ public class PE07 {
 
     public boolean movements(int player, int yO, int xO, int yD, int xD) {
         boolean moved = false;
-        char piece = Character.toLowerCase(chessboard[yO][xO];
-        if (Character.toLowerCase(chessboard[yO][xO]) == 'p') {
+        char piece = Character.toLowerCase(chessboard[yO][xO]);
+        if (piece == 'p') {
                     if (xO == xD) {
                         moved = movePawn(player, yO, xO, yD, xD);
                     } else {
@@ -482,9 +482,9 @@ public class PE07 {
     
     public char promotion() {
         char newPiece = ' ';
-        System.out.println("Per quina peça vols reemplaçar el peó?");
         do {
-            newPiece = sc.nextLine().charAt(0);
+            System.out.println("Per quina peça vols reemplaçar el peó?");
+            newPiece = getPromoPiece();
             if (Character.toLowerCase(newPiece) != 'q' && Character.toLowerCase(newPiece) != 'c'
                     && Character.toLowerCase(newPiece) != 'a' && Character.toLowerCase(newPiece) != 't') {
                 System.out.println("Escull una peça vàlida");
@@ -492,6 +492,20 @@ public class PE07 {
             }
         } while (newPiece == ' ');
 
+        return newPiece;
+    }
+
+    public char getPromoPiece() {
+        char newPiece = ' ';
+        String input;
+        do{
+            input = sc.nextLine();
+            if(input.length() == 0) {
+                System.out.println("Introdueix una peça");
+            }
+        }while(input.length() == 0 || input.length() > 1);
+        
+        newPiece = input.charAt(0);
         return newPiece;
     }
 }
