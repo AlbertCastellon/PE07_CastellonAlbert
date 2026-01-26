@@ -508,4 +508,5 @@ public class PE07 {
         newPiece = input.charAt(0);
         return newPiece;
     }
+
 }
