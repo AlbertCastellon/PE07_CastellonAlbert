@@ -35,6 +35,8 @@ public class PE07 {
 
     }
 
+
+    // Omple el tauler amb les peces en la posició inicial
     public void initializeChessboard() {
         chessboard[0][0] = 't';
         chessboard[0][7] = 't';
@@ -67,6 +69,7 @@ public class PE07 {
         }
     }
 
+    // Imprimir per consola la situació actual del tauler
     public void printBoard() {
         for (int line = 0; line < chessboard.length; line++) {
             System.out.print(8 - line);
@@ -97,6 +100,7 @@ public class PE07 {
         return name;
     }
 
+    // Set de partides que seguirà fins que es vulgui parar de jugar
     public void play(String[] players) {
         boolean done = false;
         String keepPlaying = "";
@@ -124,6 +128,7 @@ public class PE07 {
         } while (!done);
     }
 
+    // Partida individual
     public int game() {
         boolean finished = false;
         int winner = 0;
@@ -133,9 +138,11 @@ public class PE07 {
         } while (!finished);
         winner = (currentTurn - 1) % 2; // l'últim que ha mogut
         System.out.println("Ha guanyat: " + players[winner]);
+        initializeChessboard();
         return winner;
     }
 
+    // Cada torn de la partida
     public boolean turn() {
         int currentPlayer = currentTurn % 2;
         int enemyPlayer = (currentPlayer + 1) % 2;
@@ -147,6 +154,7 @@ public class PE07 {
 
     }
 
+    // Entrada de la jugada, i validació i execució d'aquesta
     public String getNextPlay(int curPlayer) {
         boolean moved = false;
         String nextPlay = "";
@@ -183,14 +191,17 @@ public class PE07 {
         return nextPlay;
     }
 
+    // Obtenció de les coordenades a l'array per cada coordenada
     public int getIndex(char[] coordinates, char target) {
         return new String(coordinates).indexOf(target);
     }
 
+    // Comprovació de si les coordenades escollides existeixen al tauler
     public boolean outBounds(int xO, int yO, int xD, int yD) {
         return ((xO == -1 || yO == -1) || (xD == -1 || yD == -1));
     }
 
+    // Comprovació de si la peça és del jugador que té el torn
     public boolean yourPiece(char[][] chb, int x, int y, int curPlayer) {
         boolean yourPiece = true;
         if (curPlayer == 0) {
@@ -210,6 +221,7 @@ public class PE07 {
         return yourPiece;
     }
 
+    // Moviment del peó
     public boolean movePawn(int player, int yO, int xO, int yD, int xD) {
         boolean moved = true;
         if (player == 0) {
@@ -244,6 +256,7 @@ public class PE07 {
         return moved;
     }
 
+    // Moviment d'un peó al capturar
     public boolean capturePawn(int player, int yO, int xO, int yD, int xD) {
         boolean moved = true;
         if (player == 0) {
@@ -270,6 +283,7 @@ public class PE07 {
         return moved;
     }
 
+    // Moviment de l'alfil
     public boolean moveBishop(int player, int yO, int xO, int yD, int xD) {
         boolean moved = false;
         if (Math.abs(yO - yD) != Math.abs(xO - xD)) {
@@ -324,6 +338,7 @@ public class PE07 {
         return moved;
     }
 
+    // Moviment de la torre
     public boolean moveRook(int player, int yO, int xO, int yD, int xD) {
         boolean moved = false;
         if (yO == yD && xO == xD) {
@@ -386,6 +401,7 @@ public class PE07 {
         return moved;
     }
 
+    // Moviment del rei
     public boolean moveKing(int player, int yO, int xO, int yD, int xD) {
         boolean moved = false;
         int dy = Math.abs(yO - yD);
@@ -403,6 +419,7 @@ public class PE07 {
         return moved;
     }
 
+    // Moviment de la reina
     public boolean moveQueen(int player, int yO, int xO, int yD, int xD) {
 
         if (xO == xD || yO == yD) {
@@ -415,6 +432,7 @@ public class PE07 {
         }
     }
 
+    // Moviment del caball
     public boolean moveKnight(int player, int yO, int xO, int yD, int xD) {
         boolean moved = false;
         if (!((Math.abs(yO - yD) == 2 && Math.abs(xO - xD) == 1)
@@ -432,6 +450,7 @@ public class PE07 {
         return moved;
     }
 
+    // Comprovació de si el rei esta viu i per tant es pot seguir jugant
     public boolean kingAlive(int player) {
         char king = ' ';
         if (player == 0) {
@@ -450,6 +469,7 @@ public class PE07 {
 
     }
 
+    // Crida als moviments depenent de la peça que es vol moure
     public boolean movements(int player, int yO, int xO, int yD, int xD) {
         boolean moved = false;
         char piece = Character.toLowerCase(chessboard[yO][xO]);
@@ -480,6 +500,7 @@ public class PE07 {
                 return moved;
     }
     
+    // Promoció del peó
     public char promotion() {
         char newPiece = ' ';
         do {
@@ -495,6 +516,7 @@ public class PE07 {
         return newPiece;
     }
 
+    // Obtenció de la peça a la que es vol promocionar el peó
     public char getPromoPiece() {
         char newPiece = ' ';
         String input;
