@@ -8,6 +8,8 @@ public class PE07 {
     char[] xCoordinates = new char[8];
     char[] yCoordinates = new char[8];
     ArrayList<String> plays = new ArrayList<String>();
+    ArrayList<Character> blackCapturedPieces = new ArrayList<Character>();
+    ArrayList<Character> whiteCapturedPieces = new ArrayList<Character>();
     char[][] chessboard = new char[8][8];
     String[] players = new String[2];
     final char EMPTY = '·';
@@ -34,7 +36,6 @@ public class PE07 {
         play(players);
 
     }
-
 
     // Omple el tauler amb les peces en la posició inicial
     public void initializeChessboard() {
@@ -139,6 +140,9 @@ public class PE07 {
         winner = (currentTurn - 1) % 2; // l'últim que ha mogut
         System.out.println("Ha guanyat: " + players[winner]);
         initializeChessboard();
+        currentTurn = 0;
+        blackCapturedPieces.clear();
+        whiteCapturedPieces.clear();
         return winner;
     }
 
@@ -158,6 +162,7 @@ public class PE07 {
     public String getNextPlay(int curPlayer) {
         boolean moved = false;
         String nextPlay = "";
+        char capturedPiece = ' ';
         do {
             try {
                 System.out.println("Introdueix la jugada (coordenades d'origen-espai-coordenades de destí ex: e4 f3)");
@@ -184,9 +189,14 @@ public class PE07 {
                 System.out.println("Només pots moure les teves peces");
                 nextPlay = "";
             } else {
+                capturedPiece = chessboard[yDesti][xDesti];
                 moved = movements(curPlayer, yOrigin, xOrigin, yDesti, xDesti);
+                if (capturedPiece != EMPTY && moved) {
+                    recordCapturedPieces(capturedPiece, curPlayer);
+                }
             }
         } while (moved != true);
+
         printBoard();
         return nextPlay;
     }
@@ -474,32 +484,32 @@ public class PE07 {
         boolean moved = false;
         char piece = Character.toLowerCase(chessboard[yO][xO]);
         if (piece == 'p') {
-                    if (xO == xD) {
-                        moved = movePawn(player, yO, xO, yD, xD);
-                    } else {
-                        moved = capturePawn(player, yO, xO, yD, xD);
-                    }
-                    if (moved) {
-                        if (yD == 0 && chessboard[yD][xD] == 'P') {
-                            chessboard[yD][xD] = Character.toUpperCase(promotion());
-                        } else if (yD == 7 && chessboard[yD][xD] == 'p') {
-                            chessboard[yD][xD] = Character.toLowerCase(promotion());
-                        }
-                    }
-                } else if (piece == 'a') {
-                    moved = moveBishop(player, yO, xO, yD, xD);
-                } else if (piece == 'k') {
-                    moved = moveKing(player, yO, xO, yD, xD);
-                } else if (piece == 't') {
-                    moved = moveRook(player, yO, xO, yD, xD);
-                } else if (piece == 'q') {
-                    moved = moveQueen(player, yO, xO, yD, xD);
-                } else if (piece == 'c') {
-                    moved = moveKnight(player, yO, xO, yD, xD);
+            if (xO == xD) {
+                moved = movePawn(player, yO, xO, yD, xD);
+            } else {
+                moved = capturePawn(player, yO, xO, yD, xD);
+            }
+            if (moved) {
+                if (yD == 0 && chessboard[yD][xD] == 'P') {
+                    chessboard[yD][xD] = Character.toUpperCase(promotion());
+                } else if (yD == 7 && chessboard[yD][xD] == 'p') {
+                    chessboard[yD][xD] = Character.toLowerCase(promotion());
                 }
-                return moved;
+            }
+        } else if (piece == 'a') {
+            moved = moveBishop(player, yO, xO, yD, xD);
+        } else if (piece == 'k') {
+            moved = moveKing(player, yO, xO, yD, xD);
+        } else if (piece == 't') {
+            moved = moveRook(player, yO, xO, yD, xD);
+        } else if (piece == 'q') {
+            moved = moveQueen(player, yO, xO, yD, xD);
+        } else if (piece == 'c') {
+            moved = moveKnight(player, yO, xO, yD, xD);
+        }
+        return moved;
     }
-    
+
     // Promoció del peó
     public char promotion() {
         char newPiece = ' ';
@@ -520,15 +530,23 @@ public class PE07 {
     public char getPromoPiece() {
         char newPiece = ' ';
         String input;
-        do{
+        do {
             input = sc.nextLine();
-            if(input.length() == 0) {
+            if (input.length() == 0) {
                 System.out.println("Introdueix una peça");
             }
-        }while(input.length() == 0 || input.length() > 1);
-        
+        } while (input.length() == 0 || input.length() > 1);
+
         newPiece = input.charAt(0);
         return newPiece;
     }
 
+    // Guardar peces capturades
+    public void recordCapturedPieces(char piece, int player) {
+        if (player == 0) {
+            blackCapturedPieces.add(piece);
+        } else {
+            whiteCapturedPieces.add(piece);
+        }
+    }
 }
